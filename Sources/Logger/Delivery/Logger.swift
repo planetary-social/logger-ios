@@ -20,7 +20,7 @@ public class Logger {
 
     var service: LoggerService
 
-    init(service: LoggerService = CocoaLumberjackService()) {
+    init(service: LoggerService = LoggerServiceAdapter(fileLoggerService: CocoaLumberjackService())) {
         self.service = service
     }
 

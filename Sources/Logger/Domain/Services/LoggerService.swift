@@ -6,15 +6,20 @@
 //
 
 import Foundation
+import os.log
 
 protocol LoggerService {
 
     var fileUrls: [URL] { get }
 
-    func optional(_ error: Error?, _ detail: String?) -> Bool
-    func info(_ string: String)
     func debug(_ string: String)
+
+    func info(_ string: String)
+
+    func optional(_ error: Error?, _ detail: String?) -> Bool
+
     func unexpected(_ reason: String, _ detail: String?)
+
     func fatal(_ reason: String, _ detail: String?)
 
 }

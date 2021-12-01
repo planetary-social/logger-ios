@@ -6,10 +6,9 @@
 //
 
 import Foundation
-import CocoaLumberjack
-import os.log
+import CocoaLumberjackSwift
 
-class CocoaLumberjackService: LoggerService {
+class CocoaLumberjackService: FileLoggerService {
 
     private var fileLogger: DDFileLogger
 
@@ -24,38 +23,16 @@ class CocoaLumberjackService: LoggerService {
         DDLog.add(fileLogger)
     }
 
-    func optional(_ error: Error?, _ detail: String?) -> Bool {
-        guard let error = error else { return false }
-        let string = "LOG:ERROR:\(detail ?? "") \(error)"
-        os_log("%@", type: OSLogType.error, string)
-        // DDLogError(string)
-        return true
+    func debug(_ string: String) {
+        DDLogDebug(string)
     }
 
     func info(_ string: String) {
-        // DDLogInfo(string)
-        let message = "LOG:INFO: \(string)"
-        os_log("%@", type: OSLogType.info, message)
+        DDLogInfo(string)
     }
-
-    func debug(_ string: String) {
-        // DDLogDebug(string)
-        let message = "LOG:DEBUG: \(string)"
-        os_log("%@", type: OSLogType.debug, message)
-    }
-
-    func unexpected(_ reason: String, _ detail: String?) {
-        let string = "\(reason) \(detail ?? "")"
-        // DDLogError(string)
-        let message = "LOG:UNEXPECTED:\(string)"
-        os_log("%@", type: OSLogType.error, message)
-    }
-
-    func fatal(_ reason: String, _ detail: String?) {
-        let string = "\(reason) \(detail ?? "")"
-        // DDLogError(string)
-        let message = "LOG:FATAL:\(string)"
-        os_log("%@", type: OSLogType.fault, message)
+    
+    func error(_ string: String) {
+        DDLogError(string)
     }
 
 }

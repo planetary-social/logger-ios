@@ -28,7 +28,8 @@ public class Logger {
         return service.fileUrls
     }
 
-    public func optional(_ error: Error?, _ detail: String?) -> Bool {
+    @discardableResult
+    public func optional(_ error: Error?, _ detail: String? = nil) -> Bool {
         service.optional(error, detail)
     }
 

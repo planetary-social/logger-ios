@@ -2,7 +2,7 @@
 //  CocoaLumberjackService.swift
 //  
 //
-//  Created by Martin Dutra on 22/11/21.
+//  Created by Martin Dutra on 10/2/22.
 //
 
 import Foundation
@@ -13,7 +13,7 @@ class CocoaLumberjackService: FileLoggerService {
     private var fileLogger: DDFileLogger
 
     var fileUrls: [URL] {
-        return fileLogger.logFileManager.sortedLogFilePaths.map { URL(fileURLWithPath: $0) }
+        fileLogger.logFileManager.sortedLogFilePaths.map { URL(fileURLWithPath: $0) }
     }
 
     init() {
@@ -24,15 +24,14 @@ class CocoaLumberjackService: FileLoggerService {
     }
 
     func debug(_ string: String) {
-        DDLogDebug(string)
+        DDLogDebug(string, asynchronous: false)
     }
 
     func info(_ string: String) {
-        DDLogInfo(string)
-    }
-    
-    func error(_ string: String) {
-        DDLogError(string)
+        DDLogInfo(string, asynchronous: false)
     }
 
+    func error(_ string: String) {
+        DDLogError(string, asynchronous: false)
+    }
 }

@@ -2,11 +2,10 @@
 //  LoggerService.swift
 //  
 //
-//  Created by Martin Dutra on 22/11/21.
+//  Created by Martin Dutra on 10/2/22.
 //
 
 import Foundation
-import os.log
 
 protocol LoggerService {
 
@@ -21,5 +20,4 @@ protocol LoggerService {
     func unexpected(_ reason: String, _ detail: String?)
 
     func fatal(_ reason: String, _ detail: String?)
-
 }

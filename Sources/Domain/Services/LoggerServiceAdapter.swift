@@ -25,51 +25,52 @@ class LoggerServiceAdapter: LoggerService {
         fileLoggerService.fileUrls
     }
 
-    func debug(_ string: String, component: String) {
+    func debug(_ string: String, sourceFile: String) {
         let message = "LOG:DEBUG: \(string)"
         fileLoggerService.debug(message)
-        let osLogger = logger(for: component)
+        let osLogger = logger(for: sourceFile)
         osLogger.debug("\(string)")
     }
 
-    func info(_ string: String, component: String) {
+    func info(_ string: String, sourceFile: String) {
         let message = "LOG:INFO: \(string)"
         fileLoggerService.info(message)
-        let osLogger = logger(for: component)
+        let osLogger = logger(for: sourceFile)
         osLogger.info("\(string)")
     }
 
-    func optional(_ error: Error?, _ detail: String?, component: String) -> Bool {
+    func optional(_ error: Error?, _ detail: String?, sourceFile: String) -> Bool {
         guard let error = error else {
             return false
         }
         let message = "LOG:ERROR:\(detail ?? "") \(error)"
         fileLoggerService.error(message)
-        let osLogger = logger(for: component)
+        let osLogger = logger(for: sourceFile)
         osLogger.error("\(detail ?? "") \(error)")
         return true
     }
 
-    func unexpected(_ reason: String, _ detail: String?, component: String) {
+    func unexpected(_ reason: String, _ detail: String?, sourceFile: String) {
         let message = "LOG:UNEXPECTED:\(reason) \(detail ?? "")"
         fileLoggerService.error(message)
-        let osLogger = logger(for: component)
+        let osLogger = logger(for: sourceFile)
         osLogger.error("\(reason) \(detail ?? "")")
     }
 
-    func fatal(_ reason: String, _ detail: String?, component: String) {
+    func fatal(_ reason: String, _ detail: String?, sourceFile: String) {
         let message = "LOG:FATAL:\(reason) \(detail ?? "")"
         fileLoggerService.error(message)
-        let osLogger = logger(for: component)
+        let osLogger = logger(for: sourceFile)
         osLogger.error("\(reason) \(detail ?? "")")
     }
     
-    private func logger(for component: String) -> Logger {
-        if let logger = loggers[component] {
+    private func logger(for sourceFile: String) -> Logger {
+        let className = (sourceFile as NSString).lastPathComponent.replacingOccurrences(of: ".swift", with: "")
+        if let logger = loggers[className] {
             return logger
         } else {
-            let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: component)
-            loggers[component] = logger
+            let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: className)
+            loggers[className] = logger
             return logger
         }
     }

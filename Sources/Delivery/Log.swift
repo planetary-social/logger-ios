@@ -29,28 +29,28 @@ public class Log: LogProtocol {
     }
 
     @discardableResult
-    public func optional(_ error: Error?, _ detail: String? = nil, component: String = #file) -> Bool {
-        service.optional(error, detail, component: component)
+    public func optional(_ error: Error?, _ detail: String? = nil, sourceFile: String = #file) -> Bool {
+        service.optional(error, detail, sourceFile: sourceFile)
     }
 
-    public func info(_ string: String, component: String = #file) {
-        service.info(string, component: component)
+    public func info(_ string: String, sourceFile: String = #file) {
+        service.info(string, sourceFile: sourceFile)
     }
 
-    public func debug(_ string: String, component: String = #file) {
-        service.debug(string, component: component)
+    public func debug(_ string: String, sourceFile: String = #file) {
+        service.debug(string, sourceFile: sourceFile)
     }
 
-    public func error(_ string: String, component: String = #file) {
-        service.unexpected(string, nil, component: component)
+    public func error(_ string: String, sourceFile: String = #file) {
+        service.unexpected(string, nil, sourceFile: sourceFile)
     }
 
-    public func unexpected(_ reason: Reason, _ detail: String?, component: String = #file) {
-        service.unexpected(reason.rawValue, detail, component: component)
+    public func unexpected(_ reason: Reason, _ detail: String?, sourceFile: String = #file) {
+        service.unexpected(reason.rawValue, detail, sourceFile: sourceFile)
     }
 
-    public func fatal(_ reason: Reason, _ detail: String?, component: String = #file) {
-        service.fatal(reason.rawValue, detail, component: component)
+    public func fatal(_ reason: Reason, _ detail: String?, sourceFile: String = #file) {
+        service.fatal(reason.rawValue, detail, sourceFile: sourceFile)
     }
 }
 
@@ -66,51 +66,51 @@ public extension Log {
     ///
     /// Convenience function that unwraps the error (if exists) and logs its description
     @discardableResult
-    static func optional(_ error: Error?, _ detail: String? = nil, component: String = #file) -> Bool {
-        shared.optional(error, detail, component: component)
+    static func optional(_ error: Error?, _ detail: String? = nil, sourceFile: String = #file) -> Bool {
+        shared.optional(error, detail, sourceFile: sourceFile)
     }
 
     /// Log a INFO message
-    static func info(_ string: String, component: String = #file) {
-        shared.info(string, component: component)
+    static func info(_ string: String, sourceFile: String = #file) {
+        shared.info(string, sourceFile: sourceFile)
     }
 
     /// Log a DEBUG message
-    static func debug(_ string: String, component: String = #file) {
-        shared.debug(string, component: component)
+    static func debug(_ string: String, sourceFile: String = #file) {
+        shared.debug(string, sourceFile: sourceFile)
     }
 
     /// Log a ERROR message
     ///
     /// Convencience function that categorize common errors that the app can handle
-    static func unexpected(_ reason: Reason, _ detail: String?, component: String = #file) {
-        shared.unexpected(reason, detail, component: component)
+    static func unexpected(_ reason: Reason, _ detail: String?, sourceFile: String = #file) {
+        shared.unexpected(reason, detail, sourceFile: sourceFile)
     }
 
     /// Log a FATAL message
     ///
     /// Convencience function that categorize common errors that the app cannot handle
-    static func fatal(_ reason: Reason, _ detail: String?, component: String = #file) {
-        shared.fatal(reason, detail, component: component)
+    static func fatal(_ reason: Reason, _ detail: String?, sourceFile: String = #file) {
+        shared.fatal(reason, detail, sourceFile: sourceFile)
     }
 
     /// Log a ERROR message
     ///
     /// Convenience function that unwraps an error and a response from a network call
-    static func optional(_ error: Error?, from response: URLResponse?, component: String = #file) {
+    static func optional(_ error: Error?, from response: URLResponse?, sourceFile: String = #file) {
         guard let error = error else { return }
         guard let response = response else { return }
         let path = response.url?.path ?? "unknown path"
         let detail = "\(path) \(error)"
-        shared.unexpected(.apiError, detail, component: component)
+        shared.unexpected(.apiError, detail, sourceFile: sourceFile)
     }
 
     /// Log a ERROR message
-    static func error(_ message: String, _ detail: String? = nil, component: String = #file) {
-        shared.error(message, component: component)
+    static func error(_ message: String, _ detail: String? = nil, sourceFile: String = #file) {
+        shared.error(message, sourceFile: sourceFile)
     }
     
-    static func error(_ error: Error, _ detail: String? = nil, component: String = #file) {
-        shared.optional(error, detail, component: component)
+    static func error(_ error: Error, _ detail: String? = nil, sourceFile: String = #file) {
+        shared.optional(error, detail, sourceFile: sourceFile)
     }
 }

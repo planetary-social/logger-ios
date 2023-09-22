@@ -17,24 +17,24 @@ public protocol LogProtocol {
     ///
     /// Convenience function that unwraps the error (if exists) and logs its description
     @discardableResult
-    func optional(_ error: Error?, _ detail: String?) -> Bool
+    func optional(_ error: Error?, _ detail: String?, sourceFile: String) -> Bool
 
     /// Log a INFO message
-    func info(_ string: String)
+    func info(_ string: String, sourceFile: String)
 
     /// Log a DEBUG message
-    func debug(_ string: String)
+    func debug(_ string: String, sourceFile: String)
 
     /// Log a ERROR message
-    func error(_ string: String)
+    func error(_ string: String, sourceFile: String)
 
     /// Log a ERROR message
     ///
     /// Convencience function that categorize common errors that the app can handle
-    func unexpected(_ reason: Reason, _ detail: String?)
+    func unexpected(_ reason: Reason, _ detail: String?, sourceFile: String)
 
     /// Log a FATAL message
     ///
     /// Convencience function that categorize common errors that the app cannot handle
-    func fatal(_ reason: Reason, _ detail: String?)
+    func fatal(_ reason: Reason, _ detail: String?, sourceFile: String)
 }

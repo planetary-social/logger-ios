@@ -6,15 +6,16 @@
 //
 
 import Foundation
-import os.log
+import OSLog
 
-/// The LoggerServiceAdapter class can be used to output logs to files in the device's filesystem
+/// The LoggerServiceAdapter class can be used componenetoutput logs to files in the device's filesystem
 /// and to the Console (in real-time) when debugging
 ///
 /// It implements LoggerService so it is meant to be used by Log as a plug-in that actually outputs to logs somewhere.
 class LoggerServiceAdapter: LoggerService {
 
     var fileLoggerService: FileLoggerService
+    var loggers = [String: Logger]()
 
     init(fileLoggerService: FileLoggerService) {
         self.fileLoggerService = fileLoggerService
@@ -24,37 +25,53 @@ class LoggerServiceAdapter: LoggerService {
         fileLoggerService.fileUrls
     }
 
-    func debug(_ string: String) {
+    func debug(_ string: String, sourceFile: String) {
         let message = "LOG:DEBUG: \(string)"
         fileLoggerService.debug(message)
-        os_log("%@", type: OSLogType.debug, message)
+        let osLogger = logger(for: sourceFile)
+        osLogger.debug("\(string)")
     }
 
-    func info(_ string: String) {
+    func info(_ string: String, sourceFile: String) {
         let message = "LOG:INFO: \(string)"
-        os_log("%@", type: OSLogType.info, message)
         fileLoggerService.info(message)
+        let osLogger = logger(for: sourceFile)
+        osLogger.info("\(string)")
     }
 
-    func optional(_ error: Error?, _ detail: String?) -> Bool {
+    func optional(_ error: Error?, _ detail: String?, sourceFile: String) -> Bool {
         guard let error = error else {
             return false
         }
         let message = "LOG:ERROR:\(detail ?? "") \(error)"
-        os_log("%@", type: OSLogType.error, message)
         fileLoggerService.error(message)
+        let osLogger = logger(for: sourceFile)
+        osLogger.error("\(detail ?? "") \(error)")
         return true
     }
 
-    func unexpected(_ reason: String, _ detail: String?) {
+    func unexpected(_ reason: String, _ detail: String?, sourceFile: String) {
         let message = "LOG:UNEXPECTED:\(reason) \(detail ?? "")"
-        os_log("%@", type: OSLogType.error, message)
         fileLoggerService.error(message)
+        let osLogger = logger(for: sourceFile)
+        osLogger.error("\(reason) \(detail ?? "")")
     }
 
-    func fatal(_ reason: String, _ detail: String?) {
+    func fatal(_ reason: String, _ detail: String?, sourceFile: String) {
         let message = "LOG:FATAL:\(reason) \(detail ?? "")"
-        os_log("%@", type: OSLogType.fault, message)
         fileLoggerService.error(message)
+        let osLogger = logger(for: sourceFile)
+        osLogger.error("\(reason) \(detail ?? "")")
+    }
+    
+    private func logger(for sourceFile: String) -> Logger {
+        let className = (sourceFile as NSString).lastPathComponent.replacingOccurrences(of: ".swift", with: "")
+        if let logger = loggers[className] {
+            return logger
+        } else {
+            let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: className)
+            loggers[className] = logger
+            return logger
+        }
     }
 }
